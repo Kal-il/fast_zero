@@ -1,12 +1,8 @@
 from http import HTTPStatus
 
-from fastapi.testclient import TestClient
 
-from fast_zero.app import app
-
-
-def test_read_root_deve_retornar_ok_e_ola_mundo():
-    client = TestClient(app)  # arrange
+def test_read_root_deve_retornar_ok_e_ola_mundo(client):
+    # client = TestClient(app)  --- arrange
 
     response = client.get('/')  # act chama a função que tem o endpoin '/'
 
@@ -14,9 +10,7 @@ def test_read_root_deve_retornar_ok_e_ola_mundo():
     assert response.json() == {'message': 'Olá Mundo!'}
 
 
-def test_read_page_must_return_html():
-    client = TestClient(app)
-
+def test_read_page_must_return_html(client):
     response = client.get('/ola')
 
     assert response.status_code == HTTPStatus.OK
@@ -33,3 +27,35 @@ def test_read_page_must_return_html():
     </html>
 """
     )
+
+
+def test_create_user_must_return_created(client):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'alice',
+            'email': 'alice@example.com',
+            'password': 'secret',
+        },
+    )
+
+    assert response.status_code == HTTPStatus.CREATED
+    assert response.json() == {
+        'username': 'alice',
+        'email': 'alice@example.com',
+        'id': 1,
+    }
+
+def test_read_users(client):
+    response = client.get('/users/')
+
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {
+        'users': [
+            {
+                'username': 'alice',
+                'email': 'alice@example.com',
+                'id': ','
+            }
+        ]
+    }

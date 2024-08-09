@@ -43,7 +43,7 @@ def create_user(user: UserSchema, session: Session = Depends(get_session)):
         if db_user.username == user.username:
             raise HTTPException(
                 status_code=HTTPStatus.BAD_REQUEST,
-                deail='Username already exists',
+                detail='Username already exists',
             )
         elif db_user.email == user.email:
             raise HTTPException(
@@ -83,9 +83,7 @@ def update_user(user_id: int, user: UserSchema, session: Session = Depends(get_s
 def delete_user(user_id: int, session: Session = Depends(get_session)):
     db_user = session.scalar(select(User).where(User.id == user_id))
     if not db_user:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='User not found'
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='User not found')
     session.delete(db_user)
 
     session.commit()

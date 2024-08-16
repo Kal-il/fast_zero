@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 from fast_zero.models import TodoState
@@ -51,3 +53,32 @@ class TodoUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     state: TodoState | None = None
+
+
+class BookSchema(BaseModel):
+    id: int
+    year: int
+    title: str
+    author: str
+
+
+class BookPublic(BookSchema):
+    id: int
+
+
+class BookList(BaseModel):
+    books: list[BookPublic]
+
+
+class AuthorSchema(BaseModel):
+    id: int
+    name: str
+
+
+class AuthorList(BaseModel):
+    authors: list[AuthorSchema]
+
+
+class BookUpdate(BaseModel):
+    year: Optional[int] = None
+    title: Optional[str] = None

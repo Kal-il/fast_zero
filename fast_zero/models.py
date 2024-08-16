@@ -42,3 +42,25 @@ class Todo:
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
     user: Mapped[User] = relationship(init=False, back_populates='todos')
+
+
+@table_registry.mapped_as_dataclass
+class Author:
+    __tablename__ = 'authors'
+
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
+    name: Mapped[str]
+    books: Mapped[list['Book']] = relationship(
+        init=False, back_populates='author', cascade='all, delete-orphan'
+    )
+
+
+@table_registry.mapped_as_dataclass
+class Book:
+    __tablename__ = 'books'
+
+    id: Mapped[int] = mapped_column(init=False, primary_key=True)
+    year: Mapped[int]
+    title: Mapped[int] = mapped_column(unique=True)
+    author_id: Mapped[int] = mapped_column(ForeignKey('authors.id'))
+    author: Mapped[Author] = relationship(init=False, back_populates='books')

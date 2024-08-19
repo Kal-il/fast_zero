@@ -51,6 +51,12 @@ def read_users(session: Session, skip: int = 0, limit: int = 100):
     return {'users': users}
 
 
+@router.get('/{user_id}', response_model=UserPublic)
+def read_users_by_id(session: Session, user_id: int):
+    user = session.scalar(select(User).where(User.id == user_id))
+    return user
+
+
 @router.put('/{user_id}', response_model=UserPublic)
 def update_user(
     user_id: int,

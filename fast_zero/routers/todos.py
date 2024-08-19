@@ -92,9 +92,7 @@ def delete_todo(todo_id: int, session: Session, user: CurrentUser):
     todo = session.scalar(select(Todo).where(Todo.user_id == user.id, Todo.id == todo_id))
 
     if not todo:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='Task not found.'
-        )
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='Task not found.')
     session.delete(todo)
     session.commit()
 

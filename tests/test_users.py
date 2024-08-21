@@ -3,6 +3,12 @@ from http import HTTPStatus
 from fast_zero.schemas import UserPublic
 
 
+def test_create_user_db(client, user):
+    response = client.get('/users')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': []}
+
+
 # TESTE POST
 def test_create_user(client):
     response = client.post(

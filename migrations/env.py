@@ -5,13 +5,13 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from fast_zero.settings import Settings
+from fast_zero.database import DATABASE_URI
 from fast_zero.models import table_registry
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
+config.set_main_option('sqlalchemy.url', DATABASE_URI)
 
 
 

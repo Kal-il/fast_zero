@@ -1,23 +1,18 @@
 import factory
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 from fast_zero.app import app
-from fast_zero.database import get_session
+from fast_zero.database import engine_test, get_session, get_session_test
 from fast_zero.models import User, table_registry
 from fast_zero.security import get_password_hash
-from fast_zero.settings import Settings
 
 
 @pytest.fixture
-def client(session):
-    def get_session_override():
-        return session
-
+def client():
     with TestClient(app) as client:
-        app.dependency_overrides[get_session] = get_session_override
+        app.dependency_overrides[get_session] = get_session_test
 
         yield client
 
@@ -26,14 +21,14 @@ def client(session):
 
 @pytest.fixture
 def session():
-    engine = create_engine(Settings().DATABASE_URL)
-    table_registry.metadata.create_all(engine)
+    # engine = create_engine(TEST_DATABASE_URI)
+    table_registry.metadata.create_all(engine_test)
 
-    with Session(engine) as session:
+    with Session(engine_test) as session:
         yield session
         session.rollback()
 
-    table_registry.metadata.drop_all(engine)
+    table_registry.metadata.drop_all(engine_test)
 
 
 @pytest.fixture
